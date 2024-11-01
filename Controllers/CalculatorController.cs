@@ -4,18 +4,14 @@ namespace RestWithASPNETUdemy.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class WeatherForecastController : ControllerBase
+	public class CalculatorController : ControllerBase
 	{
-
-
-		private readonly ILogger<WeatherForecastController> _logger;
-
-
+		private readonly ILogger<CalculatorController> _logger;
 
 		[HttpGet("sum/{firstNumber}/{secondNumber}")]
 		public IActionResult Get(string firstNumber, string secondNumber)
 		{
-			if (IsNumber(firstNumber) && IsNumber(secondNumber))
+			if (IsNumeric(firstNumber) && IsNumeric(secondNumber))
 			{
 				var sum = ConvertToDecimal(firstNumber) + ConvertToDecimal(secondNumber);
 				return Ok(sum.ToString());
@@ -23,14 +19,26 @@ namespace RestWithASPNETUdemy.Controllers
 			return BadRequest("Invalid Input");
 		}
 
-		private int ConvertToDecimal(string firstNumber)
+		private bool IsNumeric(string strNumber)
 		{
-			throw new NotImplementedException();
+			double number;
+			bool IsNumeric = double.TryParse(
+				strNumber,
+				System.Globalization.NumberStyles.Any,
+				System.Globalization.NumberFormatInfo.InvariantInfo,
+				out number
+			);
+			return IsNumeric;
+		}
+		private decimal ConvertToDecimal(string strNumber)
+		{
+			decimal decimalValue;
+			if (decimal.TryParse(strNumber, out decimalValue))
+			{
+				return decimalValue;
+			}
+			return 0;
 		}
 
-		private bool IsNumber(string firstNumber)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }
